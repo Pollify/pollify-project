@@ -1,0 +1,21 @@
+apiVersion: kubedb.com/v1alpha1
+kind: MongoDB
+metadata:
+  name: discord-db
+spec:
+  version: 4.1.4
+  databaseSecret:
+    secretName: discord-db-auth
+  storageType: Durable
+  storage:
+    storageClassName: 'standard'
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 50Mi
+  podTemplate:
+    metadata:
+      labels:
+        app: MongoDB
+  terminationPolicy: Pause

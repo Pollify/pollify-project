@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discord-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discord-service
+  template:
+    metadata:
+      labels:
+        app: discord-service
+    spec:
+      containers:
+        - name: discord-service
+          image: eu.gcr.io/pollify-dev/discord-service
+          imagePullPolicy: Never
+          env:
+            - name: DB_HOST
+              value: discord-db
+            - name: DB_PORT
+              value: '27017'
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: discord-db-auth
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: discord-db-auth
+                  key: password
+            - name: MONGODB_URI
+              value: 'mongodb://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)'
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
