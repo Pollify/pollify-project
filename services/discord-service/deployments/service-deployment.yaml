@@ -33,6 +33,16 @@ spec:
                   key: password
             - name: MONGODB_URI
               value: 'mongodb://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)'
+            - name: DISCORD_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: discord-client
+                  key: id
+            - name: DISCORD_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: discord-client
+                  key: secret
           ports:
             - containerPort: 8080
       restartPolicy: Always

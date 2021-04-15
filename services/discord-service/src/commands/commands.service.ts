@@ -9,6 +9,7 @@ import { InviteHandler } from './invite/invite.handler';
 import { HelpHandler } from './help/help.handler';
 import { StatusHandler } from './status/status.handler';
 import { PollSubscriptionHandler } from './poll-subscription/poll-subscription.handler';
+import { JokeHandler } from './joke/joke.handler';
 
 @Injectable()
 export class CommandsService {
@@ -20,6 +21,7 @@ export class CommandsService {
     inviteHandler: InviteHandler,
     helpHandler: HelpHandler,
     statusHandler: StatusHandler,
+    jokeHandler: JokeHandler,
   ) {
     this.commandHandlers = [
       pollSubscriptionHandler,
@@ -27,6 +29,7 @@ export class CommandsService {
       inviteHandler,
       helpHandler,
       statusHandler,
+      jokeHandler,
     ];
   }
 

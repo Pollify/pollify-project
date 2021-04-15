@@ -17,7 +17,20 @@ export class PollSubscriptionHandler implements ICommandHandler {
   }
 
   async execute(message: Message): Promise<void> {
-    this.serverService.administratorRoleGaurd(message.guild, message.author.id);
+    if (
+      !this.serverService.userHasAdministratorPermissions(
+        message.guild,
+        message.author.id,
+      )
+    ) {
+      message.channel.send(
+        new MessageEmbed()
+          .setColor('RED')
+          .setDescription('This command is only available to administrators'),
+      );
+
+      return;
+    }
 
     switch (this.getExtraArguments(message.content)[0]) {
       case '':

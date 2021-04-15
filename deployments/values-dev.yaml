@@ -1,0 +1,8 @@
+global:
+  environment: "development"
+  dockerRegistryRepository:
+  imagePullPolicy: Never
+  defaultStorageClassName: standard
+  keycloak:
+    host: "*"
+    route: /auth

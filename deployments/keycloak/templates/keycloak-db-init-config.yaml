@@ -1,7 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: keycloak-db-init
+  name: {{ .Release.Name }}-db-init
 data:
   init.sql: |-
     CREATE DATABASE keycloak;
+

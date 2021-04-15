@@ -1,6 +1,4 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import * as sinon from 'sinon';
-import { MessageEmbed } from 'discord.js';
 
 import { PollSubscriptionHandler } from './poll-subscription.handler';
 

@@ -9,11 +9,15 @@ kubectl create namespace $DEFAULT_NAMESPACE || true
 
 kubectl config set-context  --current --namespace $DEFAULT_NAMESPACE
 
+# addons
+minikube addons enable ingress -p $CLUSTER_NAME
 
+# helm
 helm repo add appscode https://charts.appscode.com/stable/
-
+helm repo add codecentric https://codecentric.github.io/helm-charts
 helm repo update
 
+# kubedb
 helm install kubedb-operator --version v0.13.0-rc.0 --namespace kube-system appscode/kubedb
 kubectl rollout status -w deployment/kubedb-operator --namespace=kube-system # Wait for tiller pod to be ready
 echo "waiting 2 minutes for crds to be ready"

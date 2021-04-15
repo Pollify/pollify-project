@@ -7,7 +7,12 @@ ENV_FILE=$ROOT_PATH/.env
 # Export the vars in .env into your shell:
 export $(egrep -v '^#' $ENV_FILE | xargs)
 
-# SECRETS FOR DEVELOPMENT ONLY
-kubectl create secret generic -n core discord-db-auth --from-literal=username=$DISCORD_DB_USER --from-literal=password=$DISCORD_DB_PASSWORD
+# SECRETS
 
-kubectl create secret generic -n core keycloak-db-auth --from-literal=username=$KEYCLOAK_DB_USERNAME --from-literal=password=$KEYCLOAK_DB_PASSWORD
+# keycloak
+kubectl create secret generic -n core keycloak-auth --from-literal=user=$KEYCLOAK_USER --from-literal=password=$KEYCLOAK_PASSWORD
+kubectl create secret generic -n core keycloak-db-auth --from-literal=POSTGRES_USER=$KEYCLOAK_DB_USER --from-literal=POSTGRES_PASSWORD=$KEYCLOAK_DB_PASSWORD
+
+# discord
+kubectl create secret generic -n core discord-db-auth --from-literal=username=$DISCORD_DB_USER --from-literal=password=$DISCORD_DB_PASSWORD
+kubectl create secret generic -n core discord-client --from-literal=id=$DISCORD_CLIENT_ID --from-literal=secret=$DISCORD_CLIENT_SECRET

@@ -20,15 +20,10 @@ export class ServerService {
     return server;
   }
 
-  async administratorRoleGaurd(
-    guild: Guild,
-    requesterId: string,
-  ): Promise<void> {
+  userHasAdministratorPermissions(guild: Guild, requesterId: string): boolean {
     const requester = guild.members.resolve(requesterId);
 
-    if (!requester.hasPermission(Permissions.FLAGS.ADMINISTRATOR)) {
-      throw new Error(`This action is only available to administrators.`);
-    }
+    return requester.hasPermission(Permissions.FLAGS.ADMINISTRATOR);
   }
 
   async isChannelSubscribedToPolls(

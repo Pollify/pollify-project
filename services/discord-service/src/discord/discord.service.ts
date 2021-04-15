@@ -28,7 +28,7 @@ export class DiscordService {
       this.ready = true;
     });
 
-    this.client.login(this.configService.get<string>('DISCORD_TOKEN'));
+    this.client.login(this.configService.get<string>('DISCORD_CLIENT_SECRET'));
 
     return this.client;
   }

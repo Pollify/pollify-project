@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { HttpModule, Module } from '@nestjs/common';
 
 import { DiscordModule } from '../discord/discord.module';
 import { CommandsService } from './commands.service';
@@ -9,13 +9,15 @@ import { HelpHandler } from './help/help.handler';
 import { StatusHandler } from './status/status.handler';
 import { PollSubscriptionHandler } from './poll-subscription/poll-subscription.handler';
 import { ServerModule } from 'src/server/server.module';
+import { JokeHandler } from './joke/joke.handler';
 
 @Module({
-  imports: [DiscordModule, ServerModule],
+  imports: [DiscordModule, ServerModule, HttpModule],
   providers: [
     CommandsService,
     PollSubscriptionHandler,
     PingHandler,
+    JokeHandler,
     InviteHandler,
     StatusHandler,
     {
@@ -24,6 +26,7 @@ import { ServerModule } from 'src/server/server.module';
         pollSubscriptionHandler: PollSubscriptionHandler,
         pingHandler: PingHandler,
         statusHandler: StatusHandler,
+        jokeHandler: JokeHandler,
         inviteHandler: InviteHandler,
       ) => {
         return new HelpHandler([
@@ -31,12 +34,14 @@ import { ServerModule } from 'src/server/server.module';
           pingHandler,
           statusHandler,
           inviteHandler,
+          jokeHandler,
         ]);
       },
       inject: [
         PollSubscriptionHandler,
         PingHandler,
         StatusHandler,
+        JokeHandler,
         InviteHandler,
       ],
     },

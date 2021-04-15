@@ -1,25 +1,25 @@
 apiVersion: kubedb.com/v1alpha1
 kind: Postgres
 metadata:
-  name: keycloak-db
+  name: {{ .Release.Name }}-db
 spec:
-  version: 11.2
+  version: "11.2"
   databaseSecret:
     secretName: keycloak-db-auth
   storageType: Durable
   storage:
-    storageClassName: "standard"
+    storageClassName: {{ required "storageClassName is required" .Values.global.defaultStorageClassName }}
     accessModes:
       - ReadWriteOnce
     resources:
       requests:
-        storage: 50Mi
+        storage: 1Gi
   podTemplate:
     metadata:
       labels:
-        app: Postgress
-  terminationPolicy: Pause
+        app: postgres
   init:
     scriptSource:
       configMap:
-        name: keycloak-db-init
+        name: {{ .Release.Name }}-db-init
+  terminationPolicy: Pause

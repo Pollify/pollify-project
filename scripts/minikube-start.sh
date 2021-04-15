@@ -43,7 +43,7 @@ if [ $CLUSTER_STATUS -eq 0 ]; then
 
     minikube start \
     -p $CLUSTER_NAME \
-    --kubernetes-version=v1.17.6 \
+    --kubernetes-version=v1.19.9 \
     --cpus=$CPUS \
     --memory=$MEMORY \
     --disk-size=$DISK_SIZE \

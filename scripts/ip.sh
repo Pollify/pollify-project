@@ -27,9 +27,9 @@ done
 if [ $CLUSTER_STATUS -eq 2 ]; then
     SEVER_URL=$(minikube ip -p $CLUSTER_NAME)
     if [ "$HOST" = true ] ; then
-        echo $SEVER_URL
+        echo $SEVER_URL:$INGRESS_PORT
     else
-        echo "http://$SEVER_URL"
+        echo "http://$SEVER_URL:$INGRESS_PORT"
     fi
 else
     echo "Minikube is not running"
