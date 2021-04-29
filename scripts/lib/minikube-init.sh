@@ -15,7 +15,11 @@ minikube addons enable ingress -p $CLUSTER_NAME
 # helm
 helm repo add appscode https://charts.appscode.com/stable/
 helm repo add codecentric https://codecentric.github.io/helm-charts
+helm repo add strimzi https://strimzi.io/charts/
 helm repo update
+
+# strimzi
+helm install kafka-operator strimzi/strimzi-kafka-operator --namespace kube-system --set watchNamespaces="{$DEFAULT_NAMESPACE}"
 
 # kubedb
 helm install kubedb-operator --version v0.13.0-rc.0 --namespace kube-system appscode/kubedb
@@ -23,11 +27,6 @@ kubectl rollout status -w deployment/kubedb-operator --namespace=kube-system # W
 echo "waiting 2 minutes for crds to be ready"
 sleep 2m
 helm install kubedb-catalog --version v0.13.0-rc.0 --namespace kube-system appscode/kubedb-catalog
-
-# create default namespace
-kubectl create namespace $DEFAULT_NAMESPACE || true
-
-kubectl config set-context  --current --namespace $DEFAULT_NAMESPACE
 
 # create secrets
 source ${ROOT_PATH}/scripts/lib/add_secrets.sh
