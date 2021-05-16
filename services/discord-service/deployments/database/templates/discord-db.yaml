@@ -1,14 +1,14 @@
 apiVersion: kubedb.com/v1alpha1
 kind: MongoDB
 metadata:
-  name: discord-db
+  name: '{{ .Values.name }}'
 spec:
   version: 4.1.4
   databaseSecret:
     secretName: discord-db-auth
   storageType: Durable
   storage:
-    storageClassName: 'standard'
+    storageClassName: {{ required "storageClassName is required" .Values.global.defaultStorageClassName }}
     accessModes:
       - ReadWriteOnce
     resources:

@@ -1,0 +1,34 @@
+name: discord-service
+replicas: 1
+image: eu.gcr.io/pollify-dev/discord-service
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 15
+  path: /health
+  port: 8080
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+  periodSeconds: 5
+  path: /health
+  port: 8080
+database:
+  port: 27017
+  host: discord-db
+  username:
+    name: discord-db-auth
+    key: username
+  password:
+    name: discord-db-auth
+    key: password
+discord_client:
+  id:
+    name: discord-client
+    key: id
+  secret:
+    name: discord-client
+    key: secret
+containerPort: 8080

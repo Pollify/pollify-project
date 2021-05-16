@@ -241,3 +241,4 @@ junit.xml
 # custom
 *.tgz
 tilt_modules/
+generated/
