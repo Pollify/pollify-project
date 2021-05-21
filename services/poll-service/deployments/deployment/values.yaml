@@ -1,0 +1,27 @@
+name: poll-service
+replicas: 1
+image: eu.gcr.io/pollify-dev/poll-service
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 15
+  path: /health
+  port: 3000
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+  periodSeconds: 5
+  path: /health
+  port: 3000
+database:
+  port: 27017
+  host: poll-db
+  username:
+    name: poll-db-auth
+    key: username
+  password:
+    name: poll-db-auth
+    key: password
+containerPort: 3000

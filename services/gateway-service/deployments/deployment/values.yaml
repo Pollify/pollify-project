@@ -1,0 +1,21 @@
+name: gateway-service
+replicas: 1
+image: eu.gcr.io/pollify-dev/gateway-service
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 15
+  path: /health
+  port: 8080
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+  periodSeconds: 5
+  path: /health
+  port: 8080
+type: ClusterIP
+route: /api
+servicePort: 8080
+containerPort: 3000

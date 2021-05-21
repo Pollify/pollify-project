@@ -16,3 +16,6 @@ kubectl create secret generic -n core keycloak-db-auth --from-literal=POSTGRES_U
 # discord
 kubectl create secret generic -n core discord-db-auth --from-literal=username=$DISCORD_DB_USER --from-literal=password=$DISCORD_DB_PASSWORD
 kubectl create secret generic -n core discord-client --from-literal=id=$DISCORD_CLIENT_ID --from-literal=secret=$DISCORD_CLIENT_SECRET
+
+# poll
+kubectl create secret generic -n core poll-db-auth --from-literal=username=$POLL_DB_USER --from-literal=password=$POLL_DB_PASSWORD

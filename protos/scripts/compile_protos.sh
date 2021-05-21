@@ -65,7 +65,7 @@ function copy_proto_to_service {
     shift
     for service in "$@"
     do
-        OUTPUT_DIR="$ROOT_PATH/services/$service/generated/protos/$PROTO_SERVICE"
+        OUTPUT_DIR="$ROOT_PATH/services/$service/src/generated/protos/$PROTO_SERVICE"
         CURRENT_HASH=$(get_file_hash $OUTPUT_DIR/$PROTO_SERVICE.pb)
 
         # if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then

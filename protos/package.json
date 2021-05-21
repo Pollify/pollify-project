@@ -4,11 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "./scripts/compile-proto-ts && ./scripts/compile-proto-go"
+    "build": "./scripts/compile-proto-ts"
   },
   "author": "Mike Kotte",
   "license": "ISC",
   "devDependencies": {
     "ts-proto": "^1.41.1"
-  }
+  },
+  "dependencies": {}
 }

@@ -1,7 +1,14 @@
-import { Module } from "@nestjs/common";
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { PollModule } from './poll/poll.module';
 
 @Module({
-  imports: [],
+  imports: [
+    PollModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+  ],
   controllers: [],
   providers: [],
 })

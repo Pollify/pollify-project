@@ -2,6 +2,6 @@ import { Module } from '@nestjs/common';
 import { PollController } from './poll.controller';
 
 @Module({
-  controllers: [PollController]
+  controllers: [PollController],
 })
 export class PollModule {}
