@@ -14,6 +14,7 @@ async function bootstrap() {
       app,
       new DocumentBuilder()
         .setTitle('Pollify API')
+        .addServer('/api', 'Kubernetes')
         .setDescription('API overview')
         .setVersion('1.0')
         .build(),

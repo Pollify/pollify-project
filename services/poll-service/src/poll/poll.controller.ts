@@ -20,11 +20,13 @@ export class PollController implements PollServiceController {
     throw new Error('Method not implemented.');
   }
   public async deletePoll(@Payload() request: UuidRequest): Promise<void> {
+    Logger.info('fdsafdsa');
     throw new Error('Method not implemented.');
   }
   public async getPollsByUserId(
     @Payload() request: UuidRequest,
   ): Promise<PollsResponse> {
+    Logger.info('fdsafdsa');
     throw new Error('Method not implemented.');
   }
 }

@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: "{{ .Values.name }}"
-          image: "{{ .Values.image }}"
+          image: "{{ .Values.global.services.poll_service.name }}:{{ .Values.global.services.poll_service.tag }}"
           imagePullPolicy: "{{ .Values.global.imagePullPolicy }}"
           {{ if .Values.readinessProbe.enabled }}
           readinessProbe:
@@ -33,8 +33,8 @@ spec:
               port: {{ .Values.livenessProbe.port }}
           {{ end }}
           env:
-            - name: PORT
-              value: "{{ .Values.containerPort }}"
+            - name: GRPC_PORT
+              value: "{{ .Values.global.grpcPort }}"
             - name: HOST
               valueFrom:
                 fieldRef:
@@ -53,8 +53,7 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.database.password.name }}"
                   key: "{{ .Values.database.password.key }}"
-            - name: MONGODB_URI
-              value: 'mongodb://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)'
           ports:
-            - containerPort: {{ .Values.containerPort }}
+            - containerPort: {{ .Values.global.grpcPort }}
+              protocol: {{ .Values.protocol }}
       restartPolicy: Always

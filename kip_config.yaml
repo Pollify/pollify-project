@@ -30,4 +30,4 @@ scripts:
 template: project
 version: v0.0.0+unreleased
 buildPath: "<projectDir>"
-repository: "eu.gcr.io/pollify-dev/"
+repository: "eu.gcr.io/pollify-315014/"

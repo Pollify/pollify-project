@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
 
-  const url = `${configService.get('HOST')}:${configService.get('PORT')}`;
+  const url = `${configService.get('HOST')}:${configService.get('GRPC_PORT')}`;
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
@@ -25,6 +25,7 @@ async function bootstrap() {
     await app.init();
 
     Logger.info(`Running on: ${url}`);
+    Logger.info(configService.get('DB_HOST'));
   });
 }
 bootstrap();

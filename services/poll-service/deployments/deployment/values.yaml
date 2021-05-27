@@ -1,6 +1,5 @@
 name: poll-service
 replicas: 1
-image: eu.gcr.io/pollify-dev/poll-service
 readinessProbe:
   enabled: false
   initialDelaySeconds: 5
@@ -24,4 +23,5 @@ database:
   password:
     name: poll-db-auth
     key: password
-containerPort: 3000
+type: ClusterIP
+protocol: TCP

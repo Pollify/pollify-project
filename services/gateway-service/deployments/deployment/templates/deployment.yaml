@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: "{{ .Values.name }}"
-          image: "{{ .Values.image }}"
+          image: "{{ .Values.global.services.gateway_service.name }}:{{ .Values.global.services.gateway_service.tag }}"
           imagePullPolicy: "{{ .Values.global.imagePullPolicy }}"
           {{ if .Values.readinessProbe.enabled }}
           readinessProbe:
@@ -35,5 +35,9 @@ spec:
           env:
             - name: PORT
               value: "{{ .Values.containerPort }}"
+            - name: POLL_SVC
+              value: "{{ .Values.services.poll_svc }}"
+            - name: GRPC_PORT
+              value: "{{ .Values.global.grpcPort }}"
           ports:
             - containerPort: {{ .Values.containerPort }}

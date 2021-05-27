@@ -3,6 +3,7 @@ global:
   dockerRegistryRepository:
   imagePullPolicy: Never
   defaultStorageClassName: standard
+  grpcPort: 5000
   keycloak:
     host: "*"
     route: /auth

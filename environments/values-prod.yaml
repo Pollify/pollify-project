@@ -1,0 +1,9 @@
+global:
+  environment: "production"
+  dockerRegistryRepository: "eu.gcr.io/pollify-315014/"
+  imagePullPolicy: IfNotPresent
+  defaultStorageClassName: standard
+  grpcPort: 5000
+  keycloak:
+    host: "*"
+    route: /auth

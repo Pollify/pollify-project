@@ -1,5 +1,5 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
-import { ClientGrpc } from '@nestjs/microservices';
+import { ClientGrpcProxy } from '@nestjs/microservices';
 import {
   PollServiceClient,
   POLL_PACKAGE_NAME,
@@ -13,16 +13,17 @@ export class PollService implements OnModuleInit {
   private pollsService: PollServiceClient;
 
   constructor(
-    @Inject(POLL_PACKAGE_NAME) private readonly pollsClient: ClientGrpc,
+    @Inject(POLL_PACKAGE_NAME) private readonly pollsClient: ClientGrpcProxy,
   ) {}
 
   onModuleInit() {
     this.pollsService =
       this.pollsClient.getService<PollServiceClient>(POLL_SERVICE_NAME);
+    Logger.info(this.pollsClient);
   }
 
   create(createPollDto: CreatePollDto) {
-    Logger.info(createPollDto);
+    Logger.info('create poll called');
     this.pollsService.createPoll({
       title: createPollDto.name,
       image: '',
