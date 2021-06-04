@@ -3,13 +3,15 @@ syntax = "proto3";
 package poll;
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
 
 message Poll {
     string id = 1;
     string title = 2;
     string description = 3;
-    string image = 4;
-    repeated Answer answers = 5;
+    optional string image = 4;
+    optional string opengraphImage = 5;
+    repeated Answer answers = 6;
 }
   
 message Answer {
@@ -18,9 +20,10 @@ message Answer {
 }
 
 service PollService {
-    rpc CreatePoll(CreatePollRequest) returns (google.protobuf.Empty) {}
+    rpc CreatePoll(CreatePollRequest) returns (google.protobuf.StringValue) {}
     rpc DeletePoll(UuidRequest) returns (google.protobuf.Empty) {}
     rpc GetPollsByUserId(UuidRequest) returns (PollsResponse) {}
+    rpc GetFeed(google.protobuf.Empty) returns (PollsResponse) {}
 }
 
 message UuidRequest {
@@ -28,10 +31,11 @@ message UuidRequest {
 }
   
 message CreatePollRequest {
-    string title = 2;
-    string description = 3;
-    string image = 4;
-    repeated string answers = 5;
+    string title = 1;
+    string description = 2;
+    string image = 3;
+    repeated string answers = 4;
+    string creatorId = 5;
 }
 
 message PollsResponse {

@@ -53,6 +53,10 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.database.password.name }}"
                   key: "{{ .Values.database.password.key }}"
+            - name: MONGODB_URI
+              value: 'mongodb://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)'
+            - name: KAFKA_CLUSTER
+              value: "{{ .Values.kafkaCluster }}:9092"
           ports:
             - containerPort: {{ .Values.global.grpcPort }}
               protocol: {{ .Values.protocol }}

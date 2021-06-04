@@ -5,7 +5,7 @@ import { Server } from './schemas/server.schema';
 import { ServerService } from './server.service';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: 'Server', schema: Server }])],
+  imports: [MongooseModule.forFeature([{ name: 'server', schema: Server }])],
   providers: [ServerService],
   exports: [ServerService],
 })

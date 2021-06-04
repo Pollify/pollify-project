@@ -24,4 +24,4 @@ database:
     name: poll-db-auth
     key: password
 type: ClusterIP
-protocol: TCP
+kafkaCluster: kafka-cluster-kafka-bootstrap

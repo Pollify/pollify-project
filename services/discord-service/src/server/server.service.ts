@@ -7,7 +7,7 @@ import { IServer } from './schemas/server.schema';
 
 @Injectable()
 export class ServerService {
-  constructor(@InjectModel('Server') private serverModel: Model<IServer>) {}
+  constructor(@InjectModel('server') private serverModel: Model<IServer>) {}
 
   async getServer(serverId: string): Promise<IServer> {
     let server = await this.serverModel.findById(serverId);

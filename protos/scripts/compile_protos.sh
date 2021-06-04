@@ -27,6 +27,23 @@ function get_proto_services {
     echo "${array[@]}"
 }
 
+function get_proto_packages {
+    local array=()
+    for entry in "./dependencies/packages"/*
+    do
+        filename=$(basename -- "$entry")
+        list=($(cat $entry))
+        # shellcheck disable=SC2068
+        for proto in ${list[@]}
+        do
+            if [ $proto = $1 ];then
+                array+=(${filename%.*})
+            fi
+        done
+    done
+    echo "${array[@]}"
+}
+
 function get_file_hash {
     if test -f "$1"; then
         shasum $1 | awk '{ print $1 }' | tr -d '[:space:]'
@@ -45,6 +62,7 @@ function build_service_proto {
         --ts_proto_opt=addGrpcMetadata=false \
         --ts_proto_opt=addNestjsRestParameter=true \
         --ts_proto_opt=returnObservable=false \
+        --experimental_allow_proto3_optional \
         --descriptor_set_out=$OUT_DIR/services/$1/$1.pb \
         --include_imports \
         $LIB_PATH/src/services/$1.proto
@@ -56,6 +74,11 @@ function build_service_proto {
     services=($(get_proto_services $1))
     if (( ${#services[@]} )); then
         copy_proto_to_service $1 ${services[@]}
+    fi
+
+    packages=($(get_proto_packages $1))
+    if (( ${#packages[@]} )); then
+        copy_proto_to_package $1 ${packages[@]}
     fi
 }
 
@@ -72,6 +95,24 @@ function copy_proto_to_service {
             rm -rf $OUTPUT_DIR
             mkdir -p $OUTPUT_DIR
             echo "copy \"$PROTO_SERVICE\" protos to \"$service\" service"
+            cp -r $OUT_DIR/services/$PROTO_SERVICE/* $OUTPUT_DIR
+        # fi
+    done
+}
+
+function copy_proto_to_package {
+    NEW_HASH=$(get_file_hash $OUT_DIR/services/$1/$1.pb)
+    PROTO_SERVICE=$1
+    shift
+    for package in "$@"
+    do
+        OUTPUT_DIR="$ROOT_PATH/packages/$package/src/generated/protos/$PROTO_SERVICE"
+        CURRENT_HASH=$(get_file_hash $OUTPUT_DIR/$PROTO_SERVICE.pb)
+
+        # if [ "$NEW_HASH" != "$CURRENT_HASH" ]; then
+            rm -rf $OUTPUT_DIR
+            mkdir -p $OUTPUT_DIR
+            echo "copy \"$PROTO_SERVICE\" protos to \"$package\" package"
             cp -r $OUT_DIR/services/$PROTO_SERVICE/* $OUTPUT_DIR
         # fi
     done

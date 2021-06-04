@@ -22,6 +22,13 @@ RUN npm run build --prefix ../../packages/logger
 RUN npm run pack --prefix ../../packages/logger
 RUN npm install ../../packages/logger/pollify-logger-*.tgz
 
+COPY --chown=node:node $SERVICE/../../packages/events/package.json /usr/packages/events/package.json
+RUN npm install --prefix ../../packages/events
+COPY --chown=node:node $SERVICE/../../packages/events /usr/packages/events
+RUN npm run build --prefix ../../packages/events
+RUN npm run pack --prefix ../../packages/events
+RUN npm install ../../packages/events/pollify-events-*.tgz
+
 COPY --chown=node:node $SERVICE/ .
 
 FROM base as dev

@@ -32,3 +32,4 @@ discord_client:
     name: discord-client
     key: secret
 containerPort: 8080
+kafkaCluster: kafka-cluster-kafka-bootstrap

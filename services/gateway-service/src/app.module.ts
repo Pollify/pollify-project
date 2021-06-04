@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 import { PollModule } from './poll/poll.module';
 
 @Module({
@@ -8,8 +9,8 @@ import { PollModule } from './poll/poll.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    AuthModule,
   ],
   controllers: [],
-  providers: [],
 })
 export class AppModule {}

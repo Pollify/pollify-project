@@ -26,8 +26,11 @@
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.13",
     "@nestjs/microservices": "^7.6.17",
+    "@nestjs/mongoose": "^7.2.4",
     "@nestjs/platform-express": "^7.6.13",
     "grpc": "^1.24.10",
+    "kafkajs": "^1.15.0",
+    "mongoose": "^5.12.12",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.6"
@@ -40,6 +43,7 @@
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.31",
     "@types/supertest": "^2.0.10",
+    "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.15.2",
     "@typescript-eslint/parser": "^4.15.2",
     "eslint": "^7.20.0",
@@ -55,7 +59,8 @@
     "typescript": "^4.1.5"
   },
   "peerDependencies": {
-    "@pollify/logger": "file:../../packages/logger"
+    "@pollify/logger": "file:../../packages/logger",
+    "@pollify/events": "file:../../packages/events"
   },
   "jest": {
     "moduleFileExtensions": [

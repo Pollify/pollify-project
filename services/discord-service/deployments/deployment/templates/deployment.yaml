@@ -33,8 +33,6 @@ spec:
               port: {{ .Values.livenessProbe.port }}
           {{ end }}
           env:
-            - name: PORT
-              value: "{{ .Values.containerPort }}"
             - name: DB_HOST
               value: "{{ .Values.database.host }}"
             - name: DB_PORT
@@ -61,6 +59,8 @@ spec:
                 secretKeyRef:
                   name: "{{ .Values.discord_client.secret.name }}"
                   key: "{{ .Values.discord_client.secret.key }}"
+            - name: KAFKA_CLUSTER
+              value: "{{ .Values.kafkaCluster }}:9092"
           ports:
             - containerPort: {{ .Values.containerPort }}
       restartPolicy: Always

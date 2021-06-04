@@ -7,6 +7,6 @@ spec:
   selector:
     app: '{{ .Values.name }}'
   ports:
-    - protocol: {{ .Values.protocol }}
+    - name: grpc
       port: {{ .Values.global.grpcPort }}
       targetPort: {{ .Values.global.grpcPort }}

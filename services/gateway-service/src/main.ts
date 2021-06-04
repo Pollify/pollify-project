@@ -1,3 +1,4 @@
+import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -17,8 +18,16 @@ async function bootstrap() {
         .addServer('/api', 'Kubernetes')
         .setDescription('API overview')
         .setVersion('1.0')
+        .addBearerAuth()
         .build(),
     ),
+  );
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+    }),
   );
 
   await app.listen(configService.get('PORT'));

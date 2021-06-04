@@ -48,7 +48,7 @@ to_run = cfg.get('to-run', [])
 
 if 'gateway-service' in to_run:
     docker_build(
-        'eu.gcr.io/pollify-dev/gateway-service',
+        'eu.gcr.io/pollify-315014/gateway-service',
         '.',
         target='dev',
         dockerfile='./services/gateway-service/Dockerfile',
@@ -63,7 +63,7 @@ if 'gateway-service' in to_run:
 
 if 'discord-service' in to_run:
     docker_build(
-        'eu.gcr.io/pollify-dev/discord-service',
+        'eu.gcr.io/pollify-315014/discord-service',
         '.',
         target='dev',
         dockerfile='./services/discord-service/Dockerfile',
@@ -78,7 +78,7 @@ if 'discord-service' in to_run:
 
 if 'poll-service' in to_run:
     docker_build(
-        'eu.gcr.io/pollify-dev/poll-service',
+        'eu.gcr.io/pollify-315014/poll-service',
         '.',
         target='dev',
         dockerfile='./services/poll-service/Dockerfile',

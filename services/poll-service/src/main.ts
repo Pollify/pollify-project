@@ -21,11 +21,20 @@ async function bootstrap() {
     },
   });
 
+  app.connectMicroservice<MicroserviceOptions>({
+    transport: Transport.KAFKA,
+    options: {
+      client: {
+        clientId: 'poll-service',
+        brokers: [configService.get('KAFKA_CLUSTER')],
+      },
+    },
+  });
+
   app.startAllMicroservices(async () => {
     await app.init();
 
-    Logger.info(`Running on: ${url}`);
-    Logger.info(configService.get('DB_HOST'));
+    Logger.info(`Service successfully started`);
   });
 }
 bootstrap();

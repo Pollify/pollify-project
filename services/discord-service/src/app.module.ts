@@ -5,12 +5,14 @@ import { DiscordModule } from './discord/discord.module';
 import { CommandsModule } from './commands/commands.module';
 import { ReactionsModule } from './reactions/reactions.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PollModule } from './poll/poll.module';
 
 @Module({
   imports: [
     DiscordModule,
     CommandsModule,
     ReactionsModule,
+    PollModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
