@@ -1,6 +1,6 @@
-import { Message } from 'discord.js';
+import { Message, MessageReaction } from 'discord.js';
 
 export interface IReactionHandler {
-  execute: (message: Message) => Promise<void>;
-  test: (content: string) => boolean;
+  test: (message: MessageReaction, clientId: string) => Promise<boolean>;
+  execute: (message: MessageReaction, userId: string) => Promise<void>;
 }

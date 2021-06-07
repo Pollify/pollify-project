@@ -3,7 +3,7 @@ import { PollService } from './poll.service';
 import { PollController } from './poll.controller';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { POLL_PACKAGE_NAME } from 'src/generated/protos/polls/polls';
+import { POLL_PACKAGE_NAME } from 'src/generated/protos/poll/poll';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -19,10 +19,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
               'GRPC_PORT',
             )}`,
             package: POLL_PACKAGE_NAME,
-            protoPath: join(
-              __dirname,
-              '/../generated/protos/polls/polls.proto',
-            ),
+            protoPath: join(__dirname, '/../generated/protos/poll/poll.proto'),
           },
         });
       },

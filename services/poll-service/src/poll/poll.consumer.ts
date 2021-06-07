@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
 import Logger from '@pollify/logger';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { IBaseEvent, ICreatedPoll, EVENTS } from '@pollify/events';
+import {
+  IBaseEvent,
+  ICreatedPoll,
+  IDeletedPoll,
+  EVENTS,
+} from '@pollify/events';
 import { PollService } from './poll.service';
 
 @Controller()
@@ -13,8 +18,12 @@ export class PollConsumer {
     const event: IBaseEvent = kafkaMessage.value;
 
     switch (event.name) {
-      case EVENTS.POLLS.POLL_CREATED:
+      case EVENTS.POLLS.CREATED:
         this.handlePollCreatedEvent(event.value);
+        break;
+
+      case EVENTS.POLLS.DELETED:
+        this.handlePollDeletedEvent(event.value);
         break;
 
       default:
@@ -23,8 +32,11 @@ export class PollConsumer {
     }
   }
 
-  private handlePollCreatedEvent(event: ICreatedPoll) {
-    Logger.info('Handled event, yeet');
-    this.pollService.create(event);
+  private async handlePollCreatedEvent(event: ICreatedPoll) {
+    await this.pollService.create(event);
+  }
+
+  private async handlePollDeletedEvent(event: IDeletedPoll) {
+    await this.pollService.delete(event);
   }
 }

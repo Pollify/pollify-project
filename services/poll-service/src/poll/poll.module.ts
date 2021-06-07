@@ -23,7 +23,7 @@ import { Poll } from './schemas/poll.schema';
               brokers: [configService.get('KAFKA_CLUSTER')],
             },
             consumer: {
-              groupId: 'poll-service',
+              groupId: 'poll-service-consumer',
             },
           },
         });

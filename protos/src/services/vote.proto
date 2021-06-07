@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package vote;
+
+import "google/protobuf/empty.proto";
+
+message VoteResponse {
+    string votableId = 1;
+    repeated Vote votes = 2;
+}
+  
+message Vote {
+    string id = 1;
+    int64 count = 2;
+    bool usersVote = 3;
+}
+
+service VoteService {
+    rpc Vote(VoteRequest) returns (google.protobuf.Empty) {}
+    rpc GetVotableVotesCount(VotableRequest) returns (VoteResponse) {}
+}
+
+message VotableRequest {
+    string uuid = 1;
+    optional string votableId = 2;
+}
+  
+message VoteRequest {
+    string votableId = 1;
+    string answerId = 2;
+    string voterId = 3; 
+}

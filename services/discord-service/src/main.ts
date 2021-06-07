@@ -6,9 +6,11 @@ import { CommandsService } from './commands/commands.service';
 import { ReactionsService } from './reactions/reactions.service';
 import { ConfigService } from '@nestjs/config';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { PollConsumer } from './poll/poll.consumer';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const pollConsumer = app.get(PollConsumer);
   const configService = app.get(ConfigService);
   const discordService = app.get(DiscordService);
   const commandService = app.get(CommandsService);
@@ -21,10 +23,14 @@ async function bootstrap() {
         clientId: 'discord-service',
         brokers: [configService.get('KAFKA_CLUSTER')],
       },
+      consumer: {
+        groupId: 'discord-service-consumer',
+      },
     },
   });
 
   const client = await discordService.connect();
+  pollConsumer.register(client);
   commandService.register(client);
   reactionsService.register(client);
 
@@ -37,7 +43,3 @@ async function bootstrap() {
   });
 }
 bootstrap();
-
-process.on('uncaughtException', (error) => {
-  Logger.error(`UNHANDLED ERROR => ${error.message}`, error.stack);
-});

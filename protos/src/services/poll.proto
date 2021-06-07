@@ -3,7 +3,6 @@ syntax = "proto3";
 package poll;
 
 import "google/protobuf/empty.proto";
-import "google/protobuf/wrappers.proto";
 
 message Poll {
     string id = 1;
@@ -20,14 +19,14 @@ message Answer {
 }
 
 service PollService {
-    rpc CreatePoll(CreatePollRequest) returns (google.protobuf.StringValue) {}
-    rpc DeletePoll(UuidRequest) returns (google.protobuf.Empty) {}
-    rpc GetPollsByUserId(UuidRequest) returns (PollsResponse) {}
+    rpc CreatePoll(CreatePollRequest) returns (google.protobuf.Empty) {}
+    rpc DeletePoll(DeletePollRequest) returns (google.protobuf.Empty) {}
     rpc GetFeed(google.protobuf.Empty) returns (PollsResponse) {}
 }
 
-message UuidRequest {
-    string uuid = 1;
+message DeletePollRequest {
+    string id = 1;
+    string deleterId = 2; 
 }
   
 message CreatePollRequest {

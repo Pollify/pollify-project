@@ -5,8 +5,7 @@ import {
   PollsResponse,
   POLL_PACKAGE_NAME,
   POLL_SERVICE_NAME,
-} from 'src/generated/protos/polls/polls';
-import Logger from '@pollify/logger';
+} from 'src/generated/protos/poll/poll';
 import { CreatePollDto } from './dto/create-poll.dto';
 
 @Injectable()
@@ -23,17 +22,21 @@ export class PollService implements OnModuleInit {
   }
 
   async create(createPollDto: CreatePollDto, creatorId: string) {
-    const result = await this.pollsService
+    await this.pollsService
       .createPoll({
         ...createPollDto,
         creatorId: creatorId,
       })
       .toPromise();
-
-    Logger.info(result);
   }
 
   async getFeed(): Promise<PollsResponse> {
     return this.pollsService.getFeed({}).toPromise();
+  }
+
+  async delete(id: string, deleterId: string) {
+    await this.pollsService
+      .deletePoll({ id: id, deleterId: deleterId })
+      .toPromise();
   }
 }

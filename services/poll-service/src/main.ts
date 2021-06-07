@@ -4,20 +4,18 @@ import Logger from '@pollify/logger';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { AppModule } from './app.module';
-import { POLL_PACKAGE_NAME } from './generated/protos/polls/polls';
+import { POLL_PACKAGE_NAME } from './generated/protos/poll/poll';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
 
-  const url = `${configService.get('HOST')}:${configService.get('GRPC_PORT')}`;
-
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.GRPC,
     options: {
-      url: url,
+      url: `${configService.get('HOST')}:${configService.get('GRPC_PORT')}`,
       package: POLL_PACKAGE_NAME,
-      protoPath: join(__dirname, '/generated/protos/polls/polls.proto'),
+      protoPath: join(__dirname, '/generated/protos/poll/poll.proto'),
     },
   });
 
@@ -27,6 +25,9 @@ async function bootstrap() {
       client: {
         clientId: 'poll-service',
         brokers: [configService.get('KAFKA_CLUSTER')],
+      },
+      consumer: {
+        groupId: 'poll-service-consumer',
       },
     },
   });

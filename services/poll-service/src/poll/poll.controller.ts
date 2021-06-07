@@ -4,16 +4,15 @@ import {
   OnModuleDestroy,
   OnModuleInit,
 } from '@nestjs/common';
-import Logger from '@pollify/logger';
-import { NewPollCreatedEvent } from '@pollify/events';
-import { ClientKafka, Payload } from '@nestjs/microservices';
+import { NewPollCreatedEvent, NewPollDeletedEvent } from '@pollify/events';
+import { ClientKafka, Payload, RpcException } from '@nestjs/microservices';
 import {
   CreatePollRequest,
   PollServiceController,
   PollServiceControllerMethods,
   PollsResponse,
-  UuidRequest,
-} from 'src/generated/protos/polls/polls';
+  DeletePollRequest,
+} from 'src/generated/protos/poll/poll';
 import { v4 as uuidv4 } from 'uuid';
 import { PollService } from './poll.service';
 
@@ -35,12 +34,10 @@ export class PollController
     this.kafkaPollService.close();
   }
 
-  public async createPoll(@Payload() poll: CreatePollRequest): Promise<string> {
+  public async createPoll(@Payload() poll: CreatePollRequest): Promise<void> {
     var pollId = uuidv4();
 
-    Logger.info('Handled grpc call, yeet');
-
-    this.kafkaPollService
+    await this.kafkaPollService
       .send('poll', {
         key: pollId,
         value: NewPollCreatedEvent({
@@ -56,19 +53,31 @@ export class PollController
         }),
       })
       .toPromise();
-
-    return pollId;
   }
 
-  public async deletePoll(@Payload() request: UuidRequest): Promise<void> {
-    Logger.info('fdsafdsa');
-    throw new Error('Method not implemented.');
-  }
-  public async getPollsByUserId(
-    @Payload() request: UuidRequest,
-  ): Promise<PollsResponse> {
-    Logger.info('fdsafdsa');
-    throw new Error('Method not implemented.');
+  public async deletePoll(
+    @Payload() request: DeletePollRequest,
+  ): Promise<void> {
+    const foundPoll = await this.pollService.getOneById(request.id);
+
+    if (!foundPoll)
+      throw new RpcException({
+        code: 5,
+        message: 'Poll not found.',
+      });
+
+    if (foundPoll.creatorId !== request.deleterId)
+      throw new RpcException({
+        code: 7,
+        message: 'No premission to delete this poll.',
+      });
+
+    await this.kafkaPollService
+      .send('poll', {
+        key: request.id,
+        value: NewPollDeletedEvent(request),
+      })
+      .toPromise();
   }
 
   public async getFeed(): Promise<PollsResponse> {

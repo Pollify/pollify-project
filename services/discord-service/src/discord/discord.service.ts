@@ -11,9 +11,9 @@ export class DiscordService {
 
   constructor(private configService: ConfigService) {}
 
-  connect(): Client {
+  async connect(): Promise<Client> {
     this.client = new Client({
-      partials: ['MESSAGE', 'REACTION'],
+      partials: ['MESSAGE', 'REACTION', 'USER', 'GUILD_MEMBER'],
       presence: {
         status: 'online',
         activity: {
@@ -28,12 +28,14 @@ export class DiscordService {
       this.ready = true;
     });
 
-    this.client.login(this.configService.get<string>('DISCORD_CLIENT_SECRET'));
+    await this.client.login(
+      this.configService.get<string>('DISCORD_CLIENT_SECRET'),
+    );
 
     return this.client;
   }
 
-  getBotInviteLink(permissions = '26688'): string {
+  getBotInviteLink(permissions = '158752'): string {
     return `https://discordapp.com/oauth2/authorize?client_id=${this.configService.get<string>(
       'DISCORD_CLIENT_ID',
     )}&scope=bot&permissions=${permissions}`;

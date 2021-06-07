@@ -1,11 +1,17 @@
 import { Module } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+import { MongooseModule } from '@nestjs/mongoose';
+import { ServerModule } from 'src/server/server.module';
 import { PollConsumer } from './poll.consumer';
+import { PollService } from './poll.service';
+import { Poll } from './schemas/poll.schema';
 
 @Module({
-  imports: [],
+  imports: [
+    ServerModule,
+    MongooseModule.forFeature([{ name: 'poll', schema: Poll }]),
+  ],
   controllers: [PollConsumer],
-  providers: [],
+  providers: [PollService],
+  exports: [PollService],
 })
 export class PollModule {}

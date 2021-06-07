@@ -27,7 +27,7 @@
     "@nestjs/microservices": "^7.6.17",
     "@nestjs/mongoose": "^7.2.4",
     "@nestjs/platform-express": "^7.6.13",
-    "discord.js": "^12.5.1",
+    "discord.js": "^12.5.3",
     "kafkajs": "^1.15.0",
     "mongoose": "^5.12.3",
     "reflect-metadata": "^0.1.13",

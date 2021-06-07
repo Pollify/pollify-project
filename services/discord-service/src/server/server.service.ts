@@ -74,4 +74,8 @@ export class ServerService {
 
     return server;
   }
+
+  async getAllServers(): Promise<IServer[]> {
+    return this.serverModel.find();
+  }
 }

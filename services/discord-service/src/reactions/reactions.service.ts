@@ -1,18 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { Client, MessageReaction, PartialUser, User } from 'discord.js';
+import { Client, MessageReaction } from 'discord.js';
 import Logger from '@pollify/logger';
 import { IReactionHandler } from './interfaces/ICommandHandler';
+import { PollHandler } from './poll/poll.handler';
 
 @Injectable()
 export class ReactionsService {
   reactionHandlers: IReactionHandler[] = [];
 
-  constructor() {
-    this.reactionHandlers = [];
+  constructor(pollHandler: PollHandler) {
+    this.reactionHandlers = [pollHandler];
   }
 
   register(client: Client) {
     client.on('messageReactionAdd', async (reaction, user) => {
+      if (user.bot == true) return;
+      if (!reaction.message.guild) return;
+
       if (reaction.partial) {
         try {
           await reaction.fetch();
@@ -22,31 +26,32 @@ export class ReactionsService {
         }
       }
 
-      if (user.partial) {
+      if (reaction.message.partial) {
         try {
-          await user.fetch();
+          await reaction.message.fetch();
         } catch (error) {
           Logger.error(error);
           return;
         }
       }
 
-      try {
-        await this.reactionHandler(reaction, user);
-      } catch (error) {
-        Logger.error(error);
-      }
+      await this.handleReaction(reaction, client.user.id, user.id);
     });
   }
 
-  async reactionHandler(reaction: MessageReaction, user: User | PartialUser) {
-    Logger.info(reaction);
-    Logger.info(user);
-  }
-
-  private escapePrefixForRegexp(serverPrefix: string): string {
-    const char = serverPrefix[0];
-    if ('./+\\*!?)([]{}^$'.split('').includes(char)) return `\\${serverPrefix}`;
-    return serverPrefix;
+  async handleReaction(
+    reaction: MessageReaction,
+    clientId: string,
+    userId: string,
+  ) {
+    for (const handler of this.reactionHandlers) {
+      if (await handler.test(reaction, clientId)) {
+        try {
+          await handler.execute(reaction, userId);
+        } catch (error) {
+          Logger.error(error.message);
+        }
+      }
+    }
   }
 }

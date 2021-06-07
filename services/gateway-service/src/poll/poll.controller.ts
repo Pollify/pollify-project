@@ -1,10 +1,21 @@
-import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  UseGuards,
+  Delete,
+  Param,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
 import { PollService } from './poll.service';
 import { CreatePollDto } from './dto/create-poll.dto';
 import { PollifyAuthGuard } from 'src/auth/auth-guard';
 import { CurrentUser } from 'src/auth/user-decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { PollsResponse } from 'src/generated/protos/polls/polls';
+import { PollsResponse } from 'src/generated/protos/poll/poll';
 
 @Controller('poll')
 @UseGuards(PollifyAuthGuard)
@@ -17,11 +28,27 @@ export class PollController {
     @CurrentUser() userId: string,
     @Body() createPollDto: CreatePollDto,
   ) {
-    this.pollService.create(createPollDto, userId);
+    return this.pollService.create(createPollDto, userId);
   }
 
   @Get()
   async getFeed(): Promise<PollsResponse> {
     return this.pollService.getFeed();
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string, @CurrentUser() userId: string) {
+    try {
+      await this.pollService.delete(id, userId);
+    } catch (error) {
+      switch (error.code) {
+        case 5:
+          throw new NotFoundException(error.message);
+        case 7:
+          throw new ForbiddenException(error.message);
+        default:
+          throw new BadRequestException();
+      }
+    }
   }
 }
