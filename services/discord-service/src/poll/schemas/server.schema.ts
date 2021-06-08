@@ -1,12 +1,12 @@
 import { Document, Schema } from 'mongoose';
+import { IMessage, Message } from './message.schema';
 
 export interface IServer extends Document {
-  id: string;
   _id: string;
-  serverId: string;
+  messages: IMessage[];
 }
 
-export const Server: IServer = new Schema({
+export const Server: Schema = new Schema({
   _id: String,
-  serverId: String,
+  messages: [Message],
 });

@@ -3,7 +3,7 @@ import { PollService } from './poll.service';
 import { PollController } from './poll.controller';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { POLL_PACKAGE_NAME } from 'src/generated/protos/poll/poll';
+import { POLL_PACKAGE_NAME } from './../generated/protos/poll/poll';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({

@@ -1,7 +1,12 @@
 import { Controller } from '@nestjs/common';
 import Logger from '@pollify/logger';
 import { EventPattern, Payload } from '@nestjs/microservices';
-import { IBaseEvent, ICreatedPoll, EVENTS } from '@pollify/events';
+import {
+  IBaseEvent,
+  ICreatedPoll,
+  IDeletedPoll,
+  EVENTS,
+} from '@pollify/events';
 import { ServerService } from 'src/server/server.service';
 import { Client, MessageEmbed } from 'discord.js';
 import { POLL_REACTION_EMOJIS } from 'src/common/constants';
@@ -58,31 +63,49 @@ export class PollConsumer {
 
     const servers = await this.serverService.getAllServers();
 
-    const serverWithMessageIds = await Promise.all(
-      servers.map(
-        async (server) =>
-          await Promise.all(
-            server.channelsSubscribedToPolls.map(async (channelId) => {
-              const channel = this.client.channels.cache.get(channelId);
+    const serversWithMessageIds = await Promise.all(
+      servers.map(async (server) => ({
+        serverId: server.id,
+        messages: await Promise.all(
+          server.channelsSubscribedToPolls.map(async (channelId) => {
+            const channel = await this.client.channels.fetch(channelId);
 
-              if (channel?.isText()) {
-                const message = await channel.send(messageEmbed);
+            if (channel?.isText()) {
+              const message = await channel.send(messageEmbed);
 
-                await Promise.all(
-                  poll.answers.map(async (_, i) => {
-                    return message.react(POLL_REACTION_EMOJIS[i]);
-                  }),
-                );
+              await Promise.all(
+                poll.answers.map(async (_, i) => {
+                  return message.react(POLL_REACTION_EMOJIS[i]);
+                }),
+              );
 
-                return message.id;
-              }
-            }),
-          ),
-      ),
+              return { messageId: message.id, channelId: message.channel.id };
+            }
+          }),
+        ),
+      })),
     );
 
-    await this.pollService.create(poll, messageIds.flat());
+    await this.pollService.create(poll, serversWithMessageIds);
   }
 
-  private async handlePollDeletedEvent(poll: IDeletedPoll) {}
+  private async handlePollDeletedEvent(poll: IDeletedPoll) {
+    const foundPoll = await this.pollService.findById(poll.id);
+
+    if (!foundPoll) return;
+
+    foundPoll.servers.forEach(async (server) =>
+      server.messages.forEach(async (message) => {
+        const channel = await this.client.channels.fetch(message.channelId);
+
+        if (channel?.isText()) {
+          try {
+            (await channel.messages.fetch(message.id)).delete();
+          } catch (error) {
+            Logger.error(error);
+          }
+        }
+      }),
+    );
+  }
 }

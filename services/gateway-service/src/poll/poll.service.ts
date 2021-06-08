@@ -5,7 +5,7 @@ import {
   PollsResponse,
   POLL_PACKAGE_NAME,
   POLL_SERVICE_NAME,
-} from 'src/generated/protos/poll/poll';
+} from './../generated/protos/poll/poll';
 import { CreatePollDto } from './dto/create-poll.dto';
 
 @Injectable()

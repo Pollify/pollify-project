@@ -9,14 +9,18 @@ import { IPoll } from './schemas/poll.schema';
 export class PollService {
   constructor(@InjectModel('poll') private pollModel: Model<IPoll>) {}
 
-  async create(poll: ICreatedPoll, messageIds: string[]): Promise<IPoll> {
+  async create(poll: ICreatedPoll, serversAndMessageIds: any): Promise<IPoll> {
     const createdPoll = new this.pollModel({
       _id: poll.id,
       answers: poll.answers.map((answer) => ({
         _id: answer.id,
       })),
-      messages: messageIds.map((id) => ({
-        _id: id,
+      servers: serversAndMessageIds.map((s) => ({
+        _id: s.serverId,
+        messages: s.messages.map((m) => ({
+          _id: m.messageId,
+          channelId: m.channelId,
+        })),
       })),
     });
 
@@ -25,7 +29,11 @@ export class PollService {
 
   async findByMessageId(id: string): Promise<IPoll> {
     return this.pollModel.findOne({
-      messages: { $elemMatch: { _id: id } },
+      'servers.messages._id': id,
     });
+  }
+
+  async findById(id: string): Promise<IPoll> {
+    return this.pollModel.findById(id);
   }
 }

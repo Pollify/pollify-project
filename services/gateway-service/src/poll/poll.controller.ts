@@ -15,7 +15,7 @@ import { CreatePollDto } from './dto/create-poll.dto';
 import { PollifyAuthGuard } from 'src/auth/auth-guard';
 import { CurrentUser } from 'src/auth/user-decorator';
 import { ApiBearerAuth } from '@nestjs/swagger';
-import { PollsResponse } from 'src/generated/protos/poll/poll';
+import { PollsResponse } from './../generated/protos/poll/poll';
 
 @Controller('poll')
 @UseGuards(PollifyAuthGuard)
