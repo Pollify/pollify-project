@@ -12,8 +12,6 @@ export class VoteConsumer {
   voteEventHandler(@Payload() kafkaMessage: any) {
     const event: IBaseEvent = kafkaMessage.value;
 
-    console.log(event);
-
     switch (event.name) {
       case EVENTS.VOTE.VOTED:
         this.handleVotedEvent(event.value);

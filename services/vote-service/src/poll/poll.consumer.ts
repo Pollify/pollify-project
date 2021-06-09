@@ -17,8 +17,6 @@ export class PollConsumer {
   pollEventHandler(@Payload() kafkaMessage: any) {
     const event: IBaseEvent = kafkaMessage.value;
 
-    Logger.info(kafkaMessage);
-
     switch (event.name) {
       case EVENTS.POLL.CREATED:
         this.handlePollCreatedEvent(event.value);
