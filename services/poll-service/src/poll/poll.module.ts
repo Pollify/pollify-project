@@ -13,7 +13,7 @@ import { Poll } from './schemas/poll.schema';
   providers: [
     PollService,
     {
-      provide: 'POLL_SERVICE',
+      provide: 'KAFKA_SERVICE',
       useFactory: (configService: ConfigService) => {
         return ClientProxyFactory.create({
           transport: Transport.KAFKA,

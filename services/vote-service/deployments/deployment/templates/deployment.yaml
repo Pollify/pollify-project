@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: "{{ .Values.name }}"
-          image: "{{ .Values.global.services.gateway_service.name }}:{{ .Values.global.services.gateway_service.tag }}"
+          image: "{{ .Values.global.services.vote_service.name }}:{{ .Values.global.services.vote_service.tag }}"
           imagePullPolicy: "{{ .Values.global.imagePullPolicy }}"
           {{ if .Values.readinessProbe.enabled }}
           readinessProbe:
@@ -33,13 +33,31 @@ spec:
               port: {{ .Values.livenessProbe.port }}
           {{ end }}
           env:
-            - name: PORT
-              value: "{{ .Values.containerPort }}"
-            - name: POLL_SVC
-              value: "{{ .Values.services.poll_svc }}"
-            - name: VOTE_SVC
-              value: "{{ .Values.services.vote_svc }}"
             - name: GRPC_PORT
               value: "{{ .Values.global.grpcPort }}"
+            - name: HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: DB_HOST
+              value: "{{ .Values.database.host }}"
+            - name: DB_PORT
+              value: "{{ .Values.database.port }}"
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.database.username.name }}"
+                  key: "{{ .Values.database.username.key }}"
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.database.password.name }}"
+                  key: "{{ .Values.database.password.key }}"
+            - name: MONGODB_URI
+              value: 'mongodb://$(DB_USERNAME):$(DB_PASSWORD)@$(DB_HOST):$(DB_PORT)'
+            - name: KAFKA_CLUSTER
+              value: "{{ .Values.kafkaCluster }}:9092"
           ports:
-            - containerPort: {{ .Values.containerPort }}
+            - containerPort: {{ .Values.global.grpcPort }}
+              protocol: {{ .Values.protocol }}
+      restartPolicy: Always

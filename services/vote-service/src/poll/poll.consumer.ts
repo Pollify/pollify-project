@@ -7,15 +7,17 @@ import {
   IDeletedPoll,
   EVENTS,
 } from '@pollify/events';
-import { PollService } from './poll.service';
+import { VoteService } from 'src/vote/vote.service';
 
 @Controller()
 export class PollConsumer {
-  constructor(private readonly pollService: PollService) {}
+  constructor(private readonly voteService: VoteService) {}
 
   @EventPattern('poll')
   pollEventHandler(@Payload() kafkaMessage: any) {
     const event: IBaseEvent = kafkaMessage.value;
+
+    Logger.info(kafkaMessage);
 
     switch (event.name) {
       case EVENTS.POLL.CREATED:
@@ -33,10 +35,10 @@ export class PollConsumer {
   }
 
   private async handlePollCreatedEvent(event: ICreatedPoll) {
-    await this.pollService.create(event);
+    await this.voteService.create(event);
   }
 
   private async handlePollDeletedEvent(event: IDeletedPoll) {
-    await this.pollService.delete(event);
+    await this.voteService.delete(event);
   }
 }

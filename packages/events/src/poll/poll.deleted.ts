@@ -14,7 +14,7 @@ export const NewPollDeletedEvent = (
   deletedPoll: IDeletedPoll
 ): IPollDeletedEvent => {
   return {
-    name: EVENTS.POLLS.DELETED,
+    name: EVENTS.POLL.DELETED,
     value: deletedPoll,
   };
 };

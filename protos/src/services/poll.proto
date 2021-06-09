@@ -21,7 +21,12 @@ message Answer {
 service PollService {
     rpc CreatePoll(CreatePollRequest) returns (google.protobuf.Empty) {}
     rpc DeletePoll(DeletePollRequest) returns (google.protobuf.Empty) {}
+    rpc GetPoll(GetPollRequest) returns (Poll) {}
     rpc GetFeed(google.protobuf.Empty) returns (PollsResponse) {}
+}
+
+message GetPollRequest {
+    string id = 1;
 }
 
 message DeletePollRequest {

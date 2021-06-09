@@ -1,4 +1,4 @@
-name: gateway-service
+name: vote-service
 replicas: 1
 readinessProbe:
   enabled: false
@@ -6,18 +6,22 @@ readinessProbe:
   timeoutSeconds: 5
   periodSeconds: 15
   path: /health
-  port: 8080
+  port: 3000
 livenessProbe:
   enabled: false
   initialDelaySeconds: 15
   timeoutSeconds: 5
   periodSeconds: 5
   path: /health
-  port: 8080
+  port: 3000
+database:
+  port: 27017
+  host: vote-db
+  username:
+    name: vote-db-auth
+    key: username
+  password:
+    name: vote-db-auth
+    key: password
 type: ClusterIP
-route: /api
-servicePort: 8080
-containerPort: 3000
-services:
-  poll_svc: poll-service
-  vote_svc: vote-service
+kafkaCluster: kafka-cluster-kafka-bootstrap

@@ -31,7 +31,7 @@ export class PollService {
     return this.pollModel.find();
   }
 
-  async getOneById(id: string) {
+  async getOneById(id: string): Promise<IPoll> {
     return this.pollModel.findById(id);
   }
 }

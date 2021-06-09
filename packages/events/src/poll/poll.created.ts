@@ -12,7 +12,7 @@ export interface IPollCreatedEvent extends Omit<IBaseEvent, "value"> {
 
 export const NewPollCreatedEvent = (poll: ICreatedPoll): IPollCreatedEvent => {
   return {
-    name: EVENTS.POLLS.CREATED,
+    name: EVENTS.POLL.CREATED,
     value: poll,
   };
 };

@@ -19,3 +19,7 @@ kubectl create secret generic -n core discord-client --from-literal=id=$DISCORD_
 
 # poll
 kubectl create secret generic -n core poll-db-auth --from-literal=username=$POLL_DB_USER --from-literal=password=$POLL_DB_PASSWORD
+
+# vote
+kubectl create secret generic -n core vote-db-auth --from-literal=username=$VOTE_DB_USER --from-literal=password=$VOTE_DB_PASSWORD
+ 

@@ -30,11 +30,11 @@ export class PollConsumer {
     const event: IBaseEvent = kafkaMessage.value;
 
     switch (event.name) {
-      case EVENTS.POLLS.CREATED:
+      case EVENTS.POLL.CREATED:
         this.handlePollCreatedEvent(event.value, +kafkaMessage.timestamp);
         break;
 
-      case EVENTS.POLLS.DELETED:
+      case EVENTS.POLL.DELETED:
         this.handlePollDeletedEvent(event.value);
         break;
 

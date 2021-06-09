@@ -5,6 +5,7 @@ import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { POLL_PACKAGE_NAME } from './../generated/protos/poll/poll';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { VoteModule } from 'src/vote/vote.module';
 
 @Module({
   controllers: [PollController],
@@ -27,6 +28,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     },
     PollService,
   ],
-  imports: [ConfigModule],
+  imports: [ConfigModule, VoteModule],
 })
 export class PollModule {}

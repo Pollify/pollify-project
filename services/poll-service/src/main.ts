@@ -15,7 +15,7 @@ async function bootstrap() {
     options: {
       url: `${configService.get('HOST')}:${configService.get('GRPC_PORT')}`,
       package: POLL_PACKAGE_NAME,
-      protoPath: join(__dirname, '/generated/protos/poll/poll.proto'),
+      protoPath: join(__dirname, './generated/protos/poll/poll.proto'),
     },
   });
 

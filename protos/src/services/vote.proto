@@ -12,7 +12,7 @@ message VoteResponse {
 message Vote {
     string id = 1;
     int64 count = 2;
-    bool usersVote = 3;
+    bool userVote = 3;
 }
 
 service VoteService {
@@ -21,8 +21,8 @@ service VoteService {
 }
 
 message VotableRequest {
-    string uuid = 1;
-    optional string votableId = 2;
+    string id = 1;
+    optional string voterId = 2;
 }
   
 message VoteRequest {

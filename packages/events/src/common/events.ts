@@ -1,7 +1,10 @@
 const EVENTS = {
-  POLLS: {
+  POLL: {
     CREATED: "PollCreated",
     DELETED: "PollDeleted",
+  },
+  VOTE: {
+    VOTED: "Voted",
   },
 };
 
