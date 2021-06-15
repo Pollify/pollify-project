@@ -7,3 +7,6 @@ global:
   keycloak:
     host: "*"
     route: /auth
+  minio:
+    host: "*"
+    route: /files

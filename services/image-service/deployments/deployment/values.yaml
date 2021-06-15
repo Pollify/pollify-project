@@ -1,0 +1,27 @@
+name: image-service
+replicas: 1
+readinessProbe:
+  enabled: false
+  initialDelaySeconds: 5
+  timeoutSeconds: 5
+  periodSeconds: 15
+  path: /health
+  port: 3000
+livenessProbe:
+  enabled: false
+  initialDelaySeconds: 15
+  timeoutSeconds: 5
+  periodSeconds: 5
+  path: /health
+  port: 3000
+type: ClusterIP
+kafkaCluster: kafka-cluster-kafka-bootstrap
+minio:
+  host: minio
+  port: 9000
+  accesskey:
+    name: minio-secret
+    key: accesskey
+  secretkey:
+    name: minio-secret
+    key: secretkey

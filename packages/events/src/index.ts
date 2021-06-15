@@ -3,4 +3,5 @@ export { default as EVENTS } from "./common/events";
 
 export * from "./poll/poll.created";
 export * from "./poll/poll.deleted";
+export * from "./poll/poll.updated-opengraphimage";
 export * from "./vote/vote.voted";

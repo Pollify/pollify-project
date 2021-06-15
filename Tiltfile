@@ -48,6 +48,13 @@ k8s_yaml(helm('services/vote-service/deployments/deployment',
     set=['global.serverHost='+host] + get_helm_args()
 ))
 
+k8s_yaml(helm('services/image-service/deployments/deployment',
+    name='image-service',
+    namespace='core',
+    values=['./environments/values-dev.yaml'],
+    set=['global.serverHost='+host] + get_helm_args()
+))
+
 # local_resource('compile-protos', cmd='npm run build --prefix ./protos/', deps=['./protos/src/', './protos/dependencies/'])
 
 cfg = config.parse()
@@ -109,6 +116,21 @@ if 'vote-service' in to_run:
         ],
         only=[
             './services/vote-service',
+            './packages'
+        ]
+    )
+
+if 'image-service' in to_run:
+    docker_build(
+        'eu.gcr.io/pollify-315014/image-service',
+        '.',
+        target='dev',
+        dockerfile='./services/image-service/Dockerfile',
+        live_update=[
+            sync('./services/image-service/src', '/usr/src/app/src')
+        ],
+        only=[
+            './services/image-service',
             './packages'
         ]
     )

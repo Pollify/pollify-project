@@ -15,15 +15,20 @@ export class VoteConsumer {
     switch (event.name) {
       case EVENTS.VOTE.VOTED:
         this.handleVotedEvent(event.value);
+        this.logEvent(event);
         break;
 
       default:
-        Logger.error(`Event with eventName: ${event.name} is unhandled.`);
         break;
     }
   }
 
   private async handleVotedEvent(event: IVote) {
     await this.voteService.setVote(event);
+  }
+
+  private logEvent(event: IBaseEvent) {
+    Logger.info(`========== Handled event:`);
+    Logger.info(event);
   }
 }

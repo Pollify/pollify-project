@@ -7,6 +7,7 @@ export interface IPoll extends Document {
   title: string;
   description: string;
   creatorId: string;
+  opengraphImage?: string;
   answers: IAnswer[];
 }
 
@@ -15,5 +16,6 @@ export const Poll: Schema = new Schema({
   title: String,
   description: String,
   creatorId: String,
+  opengraphImage: String,
   answers: [Answer],
 });

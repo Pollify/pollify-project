@@ -32,14 +32,15 @@ export class PollConsumer {
     switch (event.name) {
       case EVENTS.POLL.CREATED:
         this.handlePollCreatedEvent(event.value, +kafkaMessage.timestamp);
+        this.logEvent(event);
         break;
 
       case EVENTS.POLL.DELETED:
         this.handlePollDeletedEvent(event.value);
+        this.logEvent(event);
         break;
 
       default:
-        Logger.error(`Event with eventName: ${event.name} is unhandled.`);
         break;
     }
   }
@@ -107,5 +108,10 @@ export class PollConsumer {
         }
       }),
     );
+  }
+
+  private logEvent(event: IBaseEvent) {
+    Logger.info(`========== Handled event:`);
+    Logger.info(event);
   }
 }

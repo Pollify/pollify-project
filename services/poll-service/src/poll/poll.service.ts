@@ -2,7 +2,11 @@ import { Model } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { IPoll } from './schemas/poll.schema';
-import { ICreatedPoll, IDeletedPoll } from '@pollify/events';
+import {
+  ICreatedPoll,
+  IDeletedPoll,
+  IOpengraphImageUpdatedPoll,
+} from '@pollify/events';
 
 @Injectable()
 export class PollService {
@@ -33,5 +37,9 @@ export class PollService {
 
   async getOneById(id: string): Promise<IPoll> {
     return this.pollModel.findById(id);
+  }
+
+  async update(id: string, updatedObject: any): Promise<void> {
+    await this.pollModel.findByIdAndUpdate(id, updatedObject);
   }
 }

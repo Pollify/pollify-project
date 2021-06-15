@@ -1,0 +1,10 @@
+name: minio
+minio:
+  existingSecret: minio-secret
+  service:
+    port: 9000
+  resources:
+    requests:
+      memory: 2Gi
+  ingress:
+    enabled: true

@@ -21,6 +21,9 @@ helm repo update
 # strimzi
 helm install kafka-operator strimzi/strimzi-kafka-operator --namespace kube-system --set watchNamespaces="{$DEFAULT_NAMESPACE}"
 
+# minio
+helm install --namespace minio-operator --create-namespace --generate-name minio/minio-operator
+
 # kubedb
 helm install kubedb-operator --version v0.13.0-rc.0 --namespace kube-system appscode/kubedb
 kubectl rollout status -w deployment/kubedb-operator --namespace=kube-system # Wait for tiller pod to be ready

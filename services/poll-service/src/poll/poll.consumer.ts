@@ -5,6 +5,7 @@ import {
   IBaseEvent,
   ICreatedPoll,
   IDeletedPoll,
+  IOpengraphImageUpdatedPoll,
   EVENTS,
 } from '@pollify/events';
 import { PollService } from './poll.service';
@@ -20,23 +21,42 @@ export class PollConsumer {
     switch (event.name) {
       case EVENTS.POLL.CREATED:
         this.handlePollCreatedEvent(event.value);
+        this.logEvent(event);
         break;
 
       case EVENTS.POLL.DELETED:
         this.handlePollDeletedEvent(event.value);
+        this.logEvent(event);
+        break;
+
+      case EVENTS.POLL.OPENGRAPH_IMAGE_UPDATED:
+        this.handlePollOpengraphImageUpdatedEvent(event.value);
+        this.logEvent(event);
         break;
 
       default:
-        Logger.error(`Event with eventName: ${event.name} is unhandled.`);
         break;
     }
   }
 
-  private async handlePollCreatedEvent(event: ICreatedPoll) {
-    await this.pollService.create(event);
+  private async handlePollCreatedEvent(poll: ICreatedPoll) {
+    await this.pollService.create(poll);
   }
 
-  private async handlePollDeletedEvent(event: IDeletedPoll) {
-    await this.pollService.delete(event);
+  private async handlePollDeletedEvent(poll: IDeletedPoll) {
+    await this.pollService.delete(poll);
+  }
+
+  private async handlePollOpengraphImageUpdatedEvent(
+    poll: IOpengraphImageUpdatedPoll,
+  ) {
+    await this.pollService.update(poll.id, {
+      opengraphImage: poll.opengraphImage,
+    });
+  }
+
+  private logEvent(event: IBaseEvent) {
+    Logger.info(`========== Handled event:`);
+    Logger.info(event);
   }
 }

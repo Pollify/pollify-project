@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Values.name }}"
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: "{{ .Values.name }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ .Values.name }}"
+    spec:
+      containers:
+        - name: "{{ .Values.name }}"
+          image: "{{ .Values.global.services.image_service.name }}:{{ .Values.global.services.image_service.tag }}"
+          imagePullPolicy: "{{ .Values.global.imagePullPolicy }}"
+          {{ if .Values.readinessProbe.enabled }}
+          readinessProbe:
+            initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            httpGet:
+              path: "{{ .Values.readinessProbe.path }}"
+              port: {{ .Values.readinessProbe.port }}
+          {{ end }}
+          {{ if .Values.livenessProbe.enabled }}
+          livenessProbe:
+            initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            httpGet:
+              path: "{{ .Values.livenessProbe.path }}"
+              port: {{ .Values.livenessProbe.port }}
+          {{ end }}
+          env:
+            - name: GRPC_PORT
+              value: "{{ .Values.global.grpcPort }}"
+            - name: HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: KAFKA_CLUSTER
+              value: "{{ .Values.kafkaCluster }}:9092"
+            - name: MINIO_HOST
+              value: "{{ .Values.minio.host }}"
+            - name: MINIO_PORT
+              value: "{{ .Values.minio.port }}"
+            - name: MINIO_ACCESSKEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.minio.accesskey.name }}"
+                  key: "{{ .Values.minio.accesskey.key }}"
+            - name: MINIO_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.minio.secretkey.name }}"
+                  key: "{{ .Values.minio.secretkey.key }}"
+          ports:
+            - containerPort: {{ .Values.global.grpcPort }}
+              protocol: {{ .Values.protocol }}
+      restartPolicy: Always

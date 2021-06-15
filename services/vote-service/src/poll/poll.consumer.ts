@@ -20,14 +20,15 @@ export class PollConsumer {
     switch (event.name) {
       case EVENTS.POLL.CREATED:
         this.handlePollCreatedEvent(event.value);
+        this.logEvent(event);
         break;
 
       case EVENTS.POLL.DELETED:
         this.handlePollDeletedEvent(event.value);
+        this.logEvent(event);
         break;
 
       default:
-        Logger.error(`Event with eventName: ${event.name} is unhandled.`);
         break;
     }
   }
@@ -38,5 +39,10 @@ export class PollConsumer {
 
   private async handlePollDeletedEvent(event: IDeletedPoll) {
     await this.voteService.delete(event);
+  }
+
+  private logEvent(event: IBaseEvent) {
+    Logger.info(`========== Handled event:`);
+    Logger.info(event);
   }
 }
