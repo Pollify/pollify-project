@@ -59,18 +59,17 @@ export class PollConsumer implements OnModuleInit, OnModuleDestroy {
       .post(
         'https://europe-west1-opengraph-image-generator.cloudfunctions.net/opengraph',
         { brand: 'Pollify - Thrustworthy polls', title: poll.description },
+        { responseType: 'arraybuffer' },
       )
       .toPromise()
-      .then((response) => response.data);
+      .then((response) => Buffer.from(response.data, 'binary'));
 
     const imageName = `${poll.id}.png`;
 
-    Logger.info(
-      await this.imageService.uploadImage(
-        POLL_BUCKET_NAME,
-        imageName,
-        opengraphImage,
-      ),
+    await this.imageService.uploadImage(
+      POLL_BUCKET_NAME,
+      imageName,
+      opengraphImage,
     );
 
     await this.kafkaService

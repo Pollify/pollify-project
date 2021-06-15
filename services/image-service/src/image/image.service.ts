@@ -39,13 +39,30 @@ export class ImageService implements OnModuleInit {
     });
   }
 
-  async uploadImage(bucketName: string, imageName: string, image: string) {
-    return this.minioClient.putObject(bucketName, imageName, image, {
-      'Content-Type': 'image/png',
-    });
+  async uploadImage(
+    bucketName: string,
+    imageName: string,
+    image: Buffer,
+    isPublic: boolean = true,
+  ) {
+    return this.minioClient.putObject(
+      bucketName,
+      `${isPublic ? 'public' : 'private'}/${imageName}`,
+      image,
+      {
+        'Content-Type': 'image/png',
+      },
+    );
   }
 
-  async removeImage(bucketName: string, imageName: string) {
-    await this.minioClient.removeObject(bucketName, imageName);
+  async removeImage(
+    bucketName: string,
+    imageName: string,
+    isPublic: boolean = true,
+  ) {
+    await this.minioClient.removeObject(
+      bucketName,
+      `${isPublic ? 'public' : 'private'}/${imageName}`,
+    );
   }
 }
