@@ -16,6 +16,7 @@ minikube addons enable ingress -p $CLUSTER_NAME
 helm repo add appscode https://charts.appscode.com/stable/
 helm repo add codecentric https://codecentric.github.io/helm-charts
 helm repo add strimzi https://strimzi.io/charts/
+helm repo add minio https://helm.min.io/
 helm repo update
 
 # strimzi
