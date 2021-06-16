@@ -11,11 +11,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Download kip 🐔
-        run: wget https://github.com/debugged-software/kip/releases/download/v0.0.16/kip--linux-amd64.zip -O kip.zip
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v1
 
-      - name: Extract kip 🐔
-        run: 7z x kip.zip
+      - name: Download kip & extract kip 🐔
+        run: |
+          wget https://github.com/debugged-software/kip/releases/download/v0.0.16/kip--linux-amd64.zip -O kip.zip
+          7z x kip.zip
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@master
