@@ -45,9 +45,9 @@ jobs:
         run: |
           helm dependency update deployments/keycloak/
           helm dependency update deployments/minio/
-        
+
       - name: Compile proto files
-          run: cd protos && ./scripts/compile_protos.sh && cd ..
+        run: cd protos && ./scripts/compile_protos.sh && cd ..
 
       - name: Build containers
         run: linux-amd64/kip build -e prod
