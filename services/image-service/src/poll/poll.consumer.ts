@@ -16,6 +16,7 @@ import {
 } from '@pollify/events';
 import { ImageService } from 'src/image/image.service';
 import { POLL_BUCKET_NAME } from 'src/common/constants';
+import { ConfigService } from '@nestjs/config';
 
 @Controller()
 export class PollConsumer implements OnModuleInit, OnModuleDestroy {
@@ -23,6 +24,7 @@ export class PollConsumer implements OnModuleInit, OnModuleDestroy {
     @Inject('KAFKA_SERVICE') private readonly kafkaService: ClientKafka,
     private readonly httpService: HttpService,
     private readonly imageService: ImageService,
+    private readonly configService: ConfigService,
   ) {}
 
   async onModuleInit() {
@@ -82,7 +84,9 @@ export class PollConsumer implements OnModuleInit, OnModuleDestroy {
         key: poll.id,
         value: NewIPollOpengraphImageUpdatedEvent({
           id: poll.id,
-          opengraphImage: `${POLL_BUCKET_NAME}/public/${imageName}`,
+          opengraphImage: `${this.configService.get(
+            'FILE_PATH_PREFIX',
+          )}/${POLL_BUCKET_NAME}/public/${imageName}`,
         }),
       })
       .toPromise();
