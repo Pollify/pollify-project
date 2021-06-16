@@ -1,0 +1,56 @@
+
+name: Build and Deploy to GKE
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recursive Checkout
+        uses: actions/checkout@v2
+
+      - name: Download kip 🐔
+        run: wget https://github.com/debugged-software/kip/releases/download/v0.0.16/kip--linux-amd64.zip -O kip.zip
+        
+      - name: Extract kip 🐔
+        run: 7z x kip.zip
+        
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+          
+      - name: Configure Gcloud Docker
+        run: gcloud auth configure-docker --project ${{ secrets.GCP_PROJECT_ID }}
+        
+      - name: Get Gcloud Credentials
+        run: gcloud container clusters get-credentials pollify --region=${{ secrets.GCP_PROJECT_REGION }}
+        
+      - name: Set Kubectl Context
+        run: kubectl config set-context --current --namespace core
+        
+      - name: Add Helm repositories
+        run: |
+          helm repo add appscode https://charts.appscode.com/stable/
+          helm repo add codecentric https://codecentric.github.io/helm-charts
+          helm repo add strimzi https://strimzi.io/charts/
+          helm repo update
+          
+      - name: Download Helm dependencies
+        run: |
+          helm dependency update deployments/keycloak/
+          helm dependency update deployments/minio/
+          
+      - name: Build containers
+        run: linux-amd64/kip build -e prod
+        
+      - name: Push containers
+        run: linux-amd64/kip push
+        
+      - name: Deploy
+        run: linux-amd64/kip deploy -e prod
