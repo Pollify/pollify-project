@@ -30,27 +30,42 @@ export class PollController {
 
   @Get(':id')
   async get(@Param('id') id: string, @CurrentUser() userId: string) {
-    const foundPoll = await this.pollService.get(id);
-    const foundVotable = await this.voteSerivce.getVotableVotesCount(
-      id,
-      userId,
-    );
+    try {
+      const foundPoll = await this.pollService.get(id);
+      const foundVotable = await this.voteSerivce.getVotableVotesCount(
+        id,
+        userId,
+      );
 
-    if (!foundPoll || !foundVotable)
-      throw new NotFoundException('Vote could not be found');
+      if (!foundPoll || !foundVotable)
+        throw new NotFoundException('Vote could not be found');
 
-    return {
-      ...foundPoll,
-      answers: foundPoll.answers.map((answer) => {
-        const votableVote = foundVotable.votes.find((v) => v.id == answer.id);
+      return {
+        ...foundPoll,
+        answers: foundPoll.answers.map((answer) => {
+          const votableVote = foundVotable.votes.find((v) => v.id == answer.id);
 
-        return {
-          ...answer,
-          votes: votableVote?.count | 0 || 0,
-          userVote: votableVote?.userVote || false,
-        };
-      }),
-    };
+          return {
+            ...answer,
+            votes: votableVote?.count | 0 || 0,
+            userVote: votableVote?.userVote || false,
+          };
+        }),
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      switch (error.code) {
+        case 5:
+          throw new NotFoundException(error.message);
+        case 7:
+          throw new ForbiddenException(error.message);
+        default:
+          throw new BadRequestException();
+      }
+    }
   }
 
   @Post()
