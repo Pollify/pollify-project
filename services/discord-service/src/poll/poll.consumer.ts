@@ -69,18 +69,22 @@ export class PollConsumer {
         serverId: server.id,
         messages: await Promise.all(
           server.channelsSubscribedToPolls.map(async (channelId) => {
-            const channel = await this.client.channels.fetch(channelId);
+            try {
+              const channel = await this.client.channels.fetch(channelId);
 
-            if (channel?.isText()) {
-              const message = await channel.send(messageEmbed);
+              if (channel?.isText()) {
+                const message = await channel.send(messageEmbed);
 
-              await Promise.all(
-                poll.answers.map(async (_, i) => {
-                  return message.react(POLL_REACTION_EMOJIS[i]);
-                }),
-              );
+                await Promise.all(
+                  poll.answers.map(async (_, i) => {
+                    return message.react(POLL_REACTION_EMOJIS[i]);
+                  }),
+                );
 
-              return { messageId: message.id, channelId: message.channel.id };
+                return { messageId: message.id, channelId: message.channel.id };
+              }
+            } catch (error) {
+              Logger.error(error);
             }
           }),
         ),
